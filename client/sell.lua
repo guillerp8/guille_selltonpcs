@@ -18,11 +18,11 @@ Citizen.CreateThread(function()
         Citizen.Wait(10)
         local player = GetPlayerPed(-1)
         local playerloc = GetEntityCoords(player, 0)     
-        if IsPedSittingInAnyVehicle(player) == false and IsPedSittingInAnyVehicle(ped) == false and ped ~= oldped and hasdrug and police then
+        if not IsPedSittingInAnyVehicle(player) and not IsPedSittingInAnyVehicle(ped) and ped ~= oldped and hasdrug and police then
             if DoesEntityExist(ped) then
                 if not IsPedDeadOrDying(ped) then
                     local tyepofped = GetPedType(ped)
-                    if tyepofped ~= 28 and IsPedAPlayer(ped) == false then
+                    if tyepofped ~= 28 and not IsPedAPlayer(ped) then
                         if ped ~= player then
                             local pos = GetEntityCoords(ped)
                             ESX.ShowFloatingHelpNotification(_U('press'), vector3(pos.x, pos.y, pos.z + 1), true, true)

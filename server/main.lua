@@ -46,9 +46,6 @@ AddEventHandler("guille_drugsystem:police", function()
 
 end)
 
-
-
-
 RegisterServerEvent("guille_drugsystem:policecall")
 AddEventHandler("guille_drugsystem:policecall", function()
 
@@ -65,7 +62,6 @@ AddEventHandler("guille_drugsystem:policecall", function()
     end
 
 end)
-
 
 RegisterServerEvent("guille_drugsystem:drugcheck")
 AddEventHandler("guille_drugsystem:drugcheck", function()
@@ -101,7 +97,5 @@ end)
 
 
 --         TriggerClientEvent('guille_drugsystem:nodrug', source)
-
-
 
 
