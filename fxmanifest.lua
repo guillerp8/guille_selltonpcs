@@ -20,3 +20,5 @@ server_scripts {
     'locales/en.lua',
 
 }
+
+-- guille_selltonpcs by guillerp#1928 is marked with CC0 1.0 
