@@ -87,7 +87,7 @@ function sell(ped)
     exports['progressBars']:startUI(8000, _U('attempt'))
     Citizen.Wait(8000)
     ClearPedTasks(GetPlayerPed(-1))
-    local attemp = math.random(1,1) -- Change the prob of calling police
+    local attemp = math.random(1,9) -- Change the prob of calling police
     print(attemp)
     if attemp > 2 then
         local player = GetPlayerPed(-1)
