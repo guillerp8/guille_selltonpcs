@@ -38,7 +38,7 @@ AddEventHandler("guille_drugsystem:police", function()
         
     end
     
-    if police >= 1 then
+    if police >= Config.numpol then
         TriggerClientEvent('guille_drugsystem:yespol', source)
     else
         TriggerClientEvent('guille_drugsystem:nopol', source)
