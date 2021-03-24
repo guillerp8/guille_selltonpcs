@@ -1,3 +1,5 @@
+-- Guille_SellToNPC's Optimized by VisiBait -> https://github.com/visibait. Original author: guillerp8 -> https://github.com/guillerp8
+
 ESX = nil
 
 local hasdrug = false
@@ -16,26 +18,25 @@ end)
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(10)
-        local player = GetPlayerPed(-1)
-        local playerloc = GetEntityCoords(player, 0)     
+        local sleep = true
+        local player = PlayerPedId()
         if not IsPedSittingInAnyVehicle(player) and not IsPedSittingInAnyVehicle(ped) and ped ~= oldped and hasdrug and police then
             if DoesEntityExist(ped) then
                 if not IsPedDeadOrDying(ped) then
                     local tyepofped = GetPedType(ped)
                     if tyepofped ~= 28 and not IsPedAPlayer(ped) then
                         if ped ~= player then
+                            sleep = false
                             local pos = GetEntityCoords(ped)
                             ESX.ShowFloatingHelpNotification(_U('press'), vector3(pos.x, pos.y, pos.z + 1), true, true)
                             if IsControlJustPressed(1, 246) then
                                 rob = math.random(1,50) -- Change the prob of getting rob
-                                print(rob)
                                 if rob > 1 then
                                     sell(ped)
                                 else
                                     steal(ped)
                                 end
                                 oldped = ped
-                                print(oldped)
 
                             end
                         end
@@ -43,6 +44,7 @@ Citizen.CreateThread(function()
                 end
             end
         end
+        if sleep then Citizen.Wait(500) end
     end
 end)
 
@@ -65,7 +67,7 @@ end)
 -- Functions
 
 
-function GetPedInFront()
+GetPedInFront = function()
 	local player = PlayerId()
 	local plyPed = GetPlayerPed(player)
 	local plyPos = GetEntityCoords(plyPed, false)
@@ -75,22 +77,21 @@ function GetPedInFront()
 	return ped
 end
 
-function sell(ped)
+sell = function(ped)
+    local player = PlayerPedId()
     TaskStandStill(ped, 20.0)
     RequestAnimDict('misscarsteal4@actor')
     FreezeEntityPosition(ped, true)
     while (not HasAnimDictLoaded('misscarsteal4@actor')) do 
         Citizen.Wait(0) 
     end
-    TaskPlayAnim(GetPlayerPed(-1), 'misscarsteal4@actor', "actor_berating_loop", 8.0, 8.0, -1, 50, 0, false, false, false)
+    TaskPlayAnim(player, 'misscarsteal4@actor', "actor_berating_loop", 8.0, 8.0, -1, 50, 0, false, false, false)
     TaskPlayAnim(ped, 'misscarsteal4@actor', "actor_berating_loop", 8.0, 8.0, -1, 50, 0, false, false, false)
     exports['progressBars']:startUI(8000, _U('attempt'))
     Citizen.Wait(8000)
-    ClearPedTasks(GetPlayerPed(-1))
+    ClearPedTasks(player)
     local attemp = math.random(1,9) -- Change the prob of calling police
-    print(attemp)
     if attemp > 2 then
-        local player = GetPlayerPed(-1)
         local playerloc = GetEntityCoords(player, 0)
         RequestAnimDict('mp_prison_break')
         FreezeEntityPosition(ped, true)
@@ -98,13 +99,12 @@ function sell(ped)
             Citizen.Wait(0) 
         end
         TaskPlayAnim(ped, 'mp_prison_break', "hack_loop", 8.0, 8.0, -1, 50, 0, false, false, false)
-        TaskPlayAnim(GetPlayerPed(-1), 'mp_prison_break', "hack_loop", 8.0, 8.0, -1, 50, 0, false, false, false)
-        print("Selling")
+        TaskPlayAnim(player, 'mp_prison_break', "hack_loop", 8.0, 8.0, -1, 50, 0, false, false, false)
         TriggerServerEvent("guille_drugsystem:sell")
         Citizen.Wait(5000)
         ClearPedTasks(ped)
         FreezeEntityPosition(ped, false)
-        ClearPedTasks(GetPlayerPed(-1))
+        ClearPedTasks(player)
 
     else
 
@@ -124,18 +124,19 @@ function sell(ped)
     
 end
 
-function steal(ped)
+steal = function(ped)
+    local player = PlayerPedId()
     TaskStandStill(ped, 20.0)
     RequestAnimDict('misscarsteal4@actor')
     FreezeEntityPosition(ped, true)
     while (not HasAnimDictLoaded('misscarsteal4@actor')) do 
         Citizen.Wait(0) 
     end
-    TaskPlayAnim(GetPlayerPed(-1), 'misscarsteal4@actor', "actor_berating_loop", 8.0, 8.0, -1, 50, 0, false, false, false)
+    TaskPlayAnim(player, 'misscarsteal4@actor', "actor_berating_loop", 8.0, 8.0, -1, 50, 0, false, false, false)
     TaskPlayAnim(ped, 'misscarsteal4@actor', "actor_berating_loop", 8.0, 8.0, -1, 50, 0, false, false, false)
     exports['progressBars']:startUI(8000, _U('attempt'))
     Citizen.Wait(8000)
-    ClearPedTasks(GetPlayerPed(-1))
+    ClearPedTasks(player)
     Citizen.Wait(200)
     RequestAnimDict('melee@unarmed@streamed_variations')
     while (not HasAnimDictLoaded('melee@unarmed@streamed_variations')) do 
@@ -143,7 +144,7 @@ function steal(ped)
     end
     Citizen.Wait(20)
     TaskPlayAnim(ped, 'melee@unarmed@streamed_variations', "plyr_takedown_front_headbutt", 8.0, 8.0, -1, 50, 0, false, false, false)
-    SetPedToRagdoll(GetPlayerPed(-1), 20000, 20000, 0, 0, 0, 0)
+    SetPedToRagdoll(player, 20000, 20000, 0, 0, 0, 0)
     Citizen.Wait(1000)
     RequestAnimDict('amb@prop_human_bum_bin@idle_b')
     while (not HasAnimDictLoaded('amb@prop_human_bum_bin@idle_b')) do 
@@ -158,7 +159,7 @@ function steal(ped)
     Citizen.Wait(12000)
 end
 
-function vibrate()
+vibrate = function()
     for i=1,3 do
         Citizen.Wait(2000)
         ShakeGameplayCam("VIBRATE_SHAKE", 0.75)
